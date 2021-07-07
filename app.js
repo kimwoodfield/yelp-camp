@@ -3,6 +3,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const Campground = require("./models/campground");
+const morgan = require("morgan");
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp-clone", {
   useNewUrlParser: true,
@@ -23,6 +24,7 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
+app.use(morgan('common'));
 
 app.get("/", (req, res) => {
   res.render("home");
