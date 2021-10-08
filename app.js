@@ -8,9 +8,16 @@ const morgan = require("morgan");
 const ejsMate = require("ejs-mate");
 const ExpressError = require('./utils/ExpressError');
 const session = require('express-session');
-const campgrounds = require('./routes/campgrounds');
-const reviews = require('./routes/reviews');
+
+
 const flash = require('connect-flash');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
+
+const reviewRoutes = require('./routes/reviews');
+const campgroundRoutes = require('./routes/campgrounds');
+const userRoutes = require('./routes/users');
 
 app.engine("ejs", engine);
 
@@ -44,10 +51,25 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());  
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use((req, res, next) => {
+  console.log(req.session);
+  res.locals.currentUser = req.user;
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
   next();
+});
+
+app.get('/fakeUser', async (req, res) => {
+  const user = new User({ email: 'kim@gmail.com', username: 'kimmm' })
+  const newUser = await User.register(user, 'chicken');
+  res.send(newUser);
 });
 
 
@@ -56,8 +78,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(morgan("common"));
 
-app.use('/campgrounds', campgrounds);
-app.use('/campgrounds/:id/reviews', reviews);
+app.use('/campgrounds', campgroundRoutes);
+app.use('/campgrounds/:id/reviews', reviewRoutes);
+app.use('/', userRoutes);
 
 app.get("/", (req, res) => {
   res.render("home");
