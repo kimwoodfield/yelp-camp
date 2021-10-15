@@ -30,6 +30,10 @@ const seedDB = async () => {
       title: `${sample(descriptors)} ${sample(places)}`,
       description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Adipisci, ducimus numquam, fugiat corrupti odio error voluptatum quidem dolorem eligendi facere velit nulla necessitatibus quas molestias dolor minus eum tenetur beatae.',
       price,
+      geometry: {
+        type : "Point", 
+        coordinates: [ -113.1331, 47.0202 ] 
+      },
       images: [
         {
           url: 'https://res.cloudinary.com/dcmbiwych/image/upload/v1633947817/YelpCamp/wy0zoy4p3dd4dmidqpmi.jpg',
