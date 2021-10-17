@@ -1,5 +1,5 @@
 <% layout('../views/layouts/boilerplate') -%>
-<div id="map" style="width: 100%; height: 500px"></div>
+<div id="cluster-map"></div>
 <h1>All Campgrounds</h1>
 <div>
     <a href="/campgrounds/new">Add Campground</a>
@@ -18,6 +18,7 @@
             <div class="col-md-8">
                 <div class="card-body">
                     <h5 class="card-title"><%=campground.title%></h5>
+                    <% console.log(campground) %> 
                     <p class="card-text"><%=campground.description%></p>
                     <p class="card-text">
                         <small class="text-muted"><%=campground.location%></small>
@@ -32,5 +33,6 @@
 
 <script>
   const mapToken = '<%=process.env.MAPBOX_TOKEN%>';
+  const campgrounds = { features: <%- JSON.stringify(campgrounds) %> }
 </script>
 <script src="/js/clusterMap.js"></script>
