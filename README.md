@@ -24,7 +24,7 @@ You can view the final project which I have deployed __[https://ancient-waters-3
 ### Project Preview
 
 <p align="center">
-    <img src="https://imgur.com/jq8giE2">
+    <img src="https://i.imgur.com/jq8giE2.gif">
 </p>
 
 ### Development
