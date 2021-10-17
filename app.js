@@ -21,12 +21,10 @@ const helmet = require('helmet');
 const reviewRoutes = require('./routes/reviews');
 const campgroundRoutes = require('./routes/campgrounds');
 const userRoutes = require('./routes/users');
-// const dbUrl = process.env.DB_URL;
-// mongodb://localhost:27017/yelp-camp-clone
+const MongoStore = require('connect-mongo');
 
-app.engine("ejs", engine);
-
-mongoose.connect('mongodb://localhost:27017/yelp-camp-clone', {
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp-clone';
+mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
@@ -39,24 +37,38 @@ db.once("open", () => {
   console.log("Database connected.");
 });
 
+app.engine("ejs", engine);
 app.use("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
 
+const secret = process.env.SECRET || 'thisshouldbeabettersecret';
+
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  touchAfter: 24 * 60 * 60,
+  secret: secret,
+});
+
+store.on('error', function(e) {
+  console.log('session store error.', e);
+});
+
 const sessionConfig = {
-  name: 'session name switch',
-  secret: 'thisshouldbeabettersecret!',
+  store,
+  name: 'session', // change the name of the cookie
+  secret: secret,
   resave: false,
   saveUninitialized: true,
   cookie: {
-    httpOnly: true,
-    // secure: true,
-    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-    maxAge: 1000 * 60 * 60 * 24 * 7
+      httpOnly: true,
+      // secure: true, // requires http 
+      maxAge: 1000 * 60 * 60 * 24 * 7
   }
 }
+
 app.use(session(sessionConfig));
 app.use(flash());
 app.use(helmet());
