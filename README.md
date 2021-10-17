@@ -6,6 +6,8 @@ This is the repository for Colt Steele's "YelpCamp" course curriculum project.
 
 For more information on the course, visit __[udemy.com/course/the-web-developer-bootcamp/](https://www.udemy.com/course/the-web-developer-bootcamp/)__.
 
+As I have now completed the course, as of (17/10/2021), the site is fully-functional. However, I will no longer be maintaining it.
+
 ### Project
 
 This is a soft "Yelp" clone that allows users to view, create, edit and delete campgrounds as well as campground reviews. 
